@@ -1,0 +1,10 @@
+//
+// Created by artem on 28.08.2022.
+//
+
+#ifndef MODELRESOLVER_EQUATIONFABRIC_H
+#define MODELRESOLVER_EQUATIONFABRIC_H
+class EquationFabric {
+
+};
+#endif //MODELRESOLVER_EQUATIONFABRIC_H
