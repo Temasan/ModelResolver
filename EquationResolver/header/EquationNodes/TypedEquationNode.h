@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <vector>
 #include <memory>
-#include "../EquationRules.h"
+#include "../EquationMaking/EquationRules.h"
 #include "EquationNode.h"
 
 class TypedEquationNode {
@@ -24,7 +24,7 @@ public:
     }
 
     template<typename T>
-    static ChildNodeType make_node(T initValue, EquationRules::Rule const &rule = EquationRules::Rule::variable, ChildNodeType child1 = nullptr, ChildNodeType child2 = nullptr){
+    static ChildNodeType make_node(T initValue, EquationRules::Rule const &rule = EquationRules::Rule::constVal, ChildNodeType child1 = nullptr, ChildNodeType child2 = nullptr){
         ChildNodeType node = std::make_shared<TypedEquationNode>(initValue, rule, child1, child2);
         if(child1) child1->assignParent(node);
         if(child2) child2->assignParent(node);
@@ -40,6 +40,9 @@ public:
 
     template<typename T = int>
     void setValue(T newValue, bool recalc = true){
+        if(m_resolver.getRule() == EquationRules::Rule::constVal){
+            throw std::exception();
+        }
         m_value.set(newValue);
         if(recalc){
             auto parent{m_parent.lock()};
@@ -138,6 +141,7 @@ private:
             double m_doubleValue;
         } m_unionValue;
     }  m_value;
+
     std::pair<ChildNodeType, ChildNodeType> m_children;
     ParentNodeType m_parent{};
     EquationRules m_resolver;

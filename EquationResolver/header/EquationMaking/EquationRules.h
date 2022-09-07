@@ -9,15 +9,24 @@ class EquationRules {
 public:
     enum class Rule{
         variable,
+        constVal,
         sum,
         minus,
         multiple,
         divide
     };
-    explicit EquationRules(Rule rule)
+
+    static constexpr EquationRules make_rule(){
+        
+    }
+    constexpr explicit EquationRules(Rule rule)
         : m_rule(rule){}
 
     EquationRules() = delete;
+
+    inline constexpr Rule getRule() noexcept{
+        return m_rule;
+    }
 
     template <typename T, typename T1, typename T2>
     inline constexpr T2 calc(T value1, T1 value2, T2 defaultValue) noexcept {

@@ -13,16 +13,16 @@ TEST(TypedEquationNode, type_int){
 }
 
 TEST(TypedEquationNode, type_double){
-    auto nodeLeft = TypedEquationNode::make_node(1.5);
-    auto nodeRight = TypedEquationNode::make_node(2.);
+    auto nodeLeft = TypedEquationNode::make_node(1.5, EquationRules::Rule::variable);
+    auto nodeRight = TypedEquationNode::make_node(2., EquationRules::Rule::variable);
     auto nodeMain = TypedEquationNode::make_node(0., EquationRules::Rule::sum, nodeLeft, nodeRight);
     ASSERT_EQ(nodeMain->get<double>(), 3.5);
     ASSERT_EQ(nodeMain->get<int>(), 3);
 }
 
 TEST(TypedEquationNode, node_recalculating){
-    auto nodeLeft = TypedEquationNode::make_node(1.5);
-    auto nodeRight = TypedEquationNode::make_node(2.);
+    auto nodeLeft = TypedEquationNode::make_node(1.5, EquationRules::Rule::variable);
+    auto nodeRight = TypedEquationNode::make_node(2., EquationRules::Rule::variable);
     auto nodeMain = TypedEquationNode::make_node(0., EquationRules::Rule::sum, nodeLeft, nodeRight);
     ASSERT_EQ(nodeMain->get<double>(), 3.5);
     ASSERT_EQ(nodeMain->get<int>(), 3);
@@ -37,8 +37,8 @@ TEST(TypedEquationNode, node_recalculating){
 }
 
 TEST(TypedEquationNode, type_deduction_recalculating){
-    auto nodeLeft = TypedEquationNode::make_node(1.5);
-    auto nodeRight = TypedEquationNode::make_node(2);
+    auto nodeLeft = TypedEquationNode::make_node(1.5, EquationRules::Rule::variable);
+    auto nodeRight = TypedEquationNode::make_node(2, EquationRules::Rule::variable);
     auto nodeMain = TypedEquationNode::make_node(0., EquationRules::Rule::sum, nodeLeft, nodeRight);
     ASSERT_EQ(nodeMain->get<double>(), 3.5);
     ASSERT_EQ(nodeMain->get<int>(), 3);
