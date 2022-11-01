@@ -5,7 +5,7 @@
 #ifndef MODELRESOLVER_EQUATIONRULES_H
 #define MODELRESOLVER_EQUATIONRULES_H
 #include <algorithm>
-class EquationRules {
+class EquationResolver {
 public:
     enum class Rule{
         variable,
@@ -16,16 +16,13 @@ public:
         divide
     };
 
-    static constexpr EquationRules make_rule(){
-        
-    }
-    constexpr explicit EquationRules(Rule rule)
+    constexpr explicit EquationResolver(Rule rule)
         : m_rule(rule){}
 
-    EquationRules() = delete;
+    EquationResolver() = delete;
 
-    inline constexpr Rule getRule() noexcept{
-        return m_rule;
+    virtual inline Rule getRule() noexcept{
+        return Rule::variable;
     }
 
     template <typename T, typename T1, typename T2>
@@ -45,4 +42,6 @@ public:
 private:
     Rule m_rule;
 };
+
+
 #endif //MODELRESOLVER_EQUATIONRULES_H
