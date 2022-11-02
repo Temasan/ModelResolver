@@ -23,16 +23,19 @@ public:
     using ParentNodeType = std::weak_ptr<TypedEquationNode>;
 
     template<typename T>
-    TypedEquationNode(T initValue, EquationResolver::Rule const &rule, ChildNodeType child1, ChildNodeType child2)
+    TypedEquationNode(T initValue, std::string const & signature, EquationResolver::Rule const &rule, ChildNodeType child1, ChildNodeType child2)
             : m_value(initValue)
             , m_children(std::make_pair(child1, child2))
-            , m_resolver(rule) {
+            , m_resolver(rule)
+            , m_signature(signature){
         calc(false);
     }
 
     template<typename T>
-    static ChildNodeType make_node(T initValue, EquationResolver::Rule const &rule = EquationResolver::Rule::constVal, ChildNodeType child1 = nullptr, ChildNodeType child2 = nullptr){
-        ChildNodeType node = std::make_shared<TypedEquationNode>(initValue, rule, child1, child2);
+    static ChildNodeType make_node(T initValue,
+                                   EquationResolver::Rule const &rule = EquationResolver::Rule::constVal,
+                                   ChildNodeType child1 = nullptr, ChildNodeType child2 = nullptr){
+        ChildNodeType node = std::make_shared<TypedEquationNode>(initValue, EquationResolver::ruleToSign(rule), rule, child1, child2);
         if(child1) child1->assignParent(node);
         if(child2) child2->assignParent(node);
         return node;
@@ -42,6 +45,14 @@ public:
 
     void assignParent(std::shared_ptr<TypedEquationNode> parent){
         m_parent = parent;
+    }
+
+    void assignChildLeft(std::shared_ptr<TypedEquationNode> child){
+        m_children.first = child;
+    }
+
+    void assignChildRight(std::shared_ptr<TypedEquationNode> child){
+        m_children.second = child;
     }
 
     template<typename T = int>
@@ -63,10 +74,8 @@ public:
         return m_value.get<T>();
     }
 
-protected:
-    template<typename T, typename T1, typename T2>
-    inline T calc(T1 value1, T2 value2) noexcept{
-        return m_resolver.calc(value1, value2, m_value.get<T>());
+    std::string const & signature() const{
+        return m_signature;
     }
 
     void calc(bool downDirection) noexcept{
@@ -101,10 +110,16 @@ protected:
     }
 
 private:
+    template<typename T, typename T1, typename T2>
+    inline T calc(T1 value1, T2 value2) noexcept{
+        return m_resolver.calc(value1, value2, m_value.get<T>());
+    }
+
     ValueStorage m_value;
     std::pair<ChildNodeType, ChildNodeType> m_children;
     ParentNodeType m_parent{};
     EquationResolver m_resolver;
+    std::string m_signature;
 };
 
 #endif //MODELRESOLVER_TYPEDEQUATIONNODE_H

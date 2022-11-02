@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(EquationResolver_unit_tests
-        tests/TypedEquationNodeTests.cpp tests/EquationFabricTest.cpp header/EquationMaking/EquationCreator.h header/EquationNodes/NamedEquationNode.h)
+        tests/TypedEquationNodeTests.cpp tests/EquationFabricTest.cpp)
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
