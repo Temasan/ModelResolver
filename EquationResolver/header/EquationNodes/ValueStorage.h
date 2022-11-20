@@ -6,6 +6,9 @@
 #define EQUATIONRESOLVER_VALUESTORAGE_H
 #include "boost/variant.hpp"
 
+/**
+ * value storage of tree element, can store int and double
+ */
 class ValueStorage {
     using value_type = boost::variant< int, double >;
 

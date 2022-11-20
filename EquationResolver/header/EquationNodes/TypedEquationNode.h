@@ -23,7 +23,7 @@ public:
     using ParentNodeType = std::weak_ptr<TypedEquationNode>;
 
     template<typename T>
-    TypedEquationNode(T initValue, std::string const & signature, EquationResolver::Rule const &rule, ChildNodeType child1, ChildNodeType child2)
+    TypedEquationNode(T initValue, std::string const & signature, EquationResolver::Rule const &rule, ChildNodeType child1 = nullptr, ChildNodeType child2 = nullptr)
             : m_value(initValue)
             , m_children(std::make_pair(child1, child2))
             , m_resolver(rule)
@@ -41,6 +41,10 @@ public:
         return node;
     }
 
+    static ChildNodeType make_variable(std::string initValue){
+        return std::make_shared<TypedEquationNode>(0., initValue, EquationResolver::Rule::variable);
+    }
+
     TypedEquationNode() = delete;
 
     void assignParent(std::shared_ptr<TypedEquationNode> parent){
@@ -51,8 +55,16 @@ public:
         m_children.first = child;
     }
 
+    ChildNodeType getLeftChild(){
+        return m_children.first;
+    }
+
     void assignChildRight(std::shared_ptr<TypedEquationNode> child){
         m_children.second = child;
+    }
+
+    ChildNodeType getRightChild(){
+        return m_children.second;
     }
 
     template<typename T = int>
@@ -76,6 +88,10 @@ public:
 
     std::string const & signature() const{
         return m_signature;
+    }
+
+    bool lessPriored(EquationResolver::Rule const & rule) const {
+        return m_resolver.lessPriored(m_resolver.getRule(), rule);
     }
 
     void calc(bool downDirection) noexcept{

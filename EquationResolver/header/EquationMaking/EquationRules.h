@@ -17,7 +17,7 @@ namespace {
             divide,
             assign,
             bracket_open,
-            bracket_close,
+            bracket_close
         };
 
         constexpr explicit EquationResolver(Rule rule)
@@ -25,8 +25,8 @@ namespace {
 
         EquationResolver() = delete;
 
-        virtual inline Rule getRule() noexcept {
-            return Rule::variable;
+        virtual inline Rule getRule() const noexcept {
+            return m_rule;
         }
 
         template<typename T, typename T1, typename T2>
@@ -62,9 +62,18 @@ namespace {
             return EquationResolver::Rule::variable;
         }
 
+        static bool lessPriored(EquationResolver::Rule const &rule1, EquationResolver::Rule const &rule2) {
+            auto it1 = m_prior.find(rule1), it2 = m_prior.find(rule2);
+            if(it1 != m_prior.end() && it2 != m_prior.end()){
+                return it1->second > it2->second;
+            }
+            return false;
+        }
+
     private:
         static const std::unordered_map<char, EquationResolver::Rule> m_signToRule;
         static const std::unordered_map<EquationResolver::Rule, char> m_ruleToSign;
+        static const std::unordered_map<EquationResolver::Rule, int> m_prior;
 
         Rule m_rule;
     };
@@ -85,6 +94,15 @@ namespace {
             std::make_pair(EquationResolver::Rule::divide, '/'),
             std::make_pair(EquationResolver::Rule::bracket_open, '('),
             std::make_pair(EquationResolver::Rule::bracket_close, ')'),
+    };
+
+    const std::unordered_map<EquationResolver::Rule, int> EquationResolver::m_prior{
+            std::make_pair(EquationResolver::Rule::sum, 1),
+            std::make_pair(EquationResolver::Rule::minus, 1),
+            std::make_pair(EquationResolver::Rule::multiple, 0),
+            std::make_pair(EquationResolver::Rule::divide, 0),
+            std::make_pair(EquationResolver::Rule::bracket_open, 0),
+            std::make_pair(EquationResolver::Rule::bracket_close, 0),
     };
 }
 
