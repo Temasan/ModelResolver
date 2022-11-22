@@ -4,15 +4,24 @@
 
 #ifndef MODELRESOLVER_EQUATIONFABRIC_H
 #define MODELRESOLVER_EQUATIONFABRIC_H
+
+template<typename TNode>
 class EquationFabric {
-    template<typename TNode>
+
+public:
+    explicit EquationFabric(std::string const &equation){
+
+    }
+
     static std::pair<TNode, std::vector<TNode>> make_equation(std::string const &equation){
 
     }
-    template<typename TNode>
-    static void union_equation(TNode head_node1, TNode head_node2){
+
+    void union_equation(TNode head_node1, TNode head_node2){
 
     }
-
+private:
+    TNode m_head;
+    std::vector<TNode> m_branches;
 };
 #endif //MODELRESOLVER_EQUATIONFABRIC_H
